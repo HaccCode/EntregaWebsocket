@@ -1,0 +1,47 @@
+{{!< layouts/main}}
+
+<h1>Listado de Productos en Tiempo Real</h1>
+
+<form id="productForm">
+    <label for="title">Título:</label>
+    <input type="text" id="title" name="title" required>
+    <label for="description">Descripción:</label>
+    <input type="text" id="description" name="description" required>
+    <label for="price">Precio:</label>
+    <input type="number" id="price" name="price" required>
+    <button type="submit">Agregar Producto</button>
+</form>
+
+
+<ul id="productsList">
+    {{#each products}}
+        <li>{{title}} - {{description}} - {{price}}</li>
+    {{/each}}
+</ul>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+<script>
+    const socket = io();
+
+
+    socket.on('updateProducts', (updatedProducts) => {
+        
+        const productsList = document.getElementById('productsList');
+        productsList.innerHTML = updatedProducts.map(product => `
+            <li>${product.title} - ${product.description} - ${product.price}</li>
+        `).join('');
+    });
+
+    const productForm = document.getElementById('productForm');
+    productForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const price = document.getElementById('price').value;
+
+       
+        socket.emit('addProduct', { title, description, price });
+    });
+</script>

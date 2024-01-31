@@ -1,0 +1,8 @@
+{{!< layouts/main}}
+
+<h1>Listado de Productos</h1>
+<ul>
+    {{#each products}}
+        <li>{{title}} - {{description}} - {{price}}</li>
+    {{/each}}
+</ul>
